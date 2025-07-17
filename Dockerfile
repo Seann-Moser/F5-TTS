@@ -15,16 +15,17 @@ RUN set -x \
     && apt-get clean
     
 WORKDIR /workspace
+ADD ./ ./
+RUN git submodule update --init --recursive \
+    && pip install -e . --no-cache-dir \
+    && pip install "fastapi[standard]" uvicorn python-multipart --no-cache-dir
 
-RUN git clone https://github.com/SWivid/F5-TTS.git \
-    && cd F5-TTS \
-    && git submodule update --init --recursive \
-    && pip install -e . --no-cache-dir
 
 ENV SHELL=/bin/bash
 
 VOLUME /root/.cache/huggingface/hub/
 
 EXPOSE 7860
+EXPOSE 8000
 
-WORKDIR /workspace/F5-TTS
+WORKDIR /workspace/
